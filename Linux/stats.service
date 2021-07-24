@@ -1,0 +1,11 @@
+[Unit]
+Description=Stats Service
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /home/ec2-user/stats.sh
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
