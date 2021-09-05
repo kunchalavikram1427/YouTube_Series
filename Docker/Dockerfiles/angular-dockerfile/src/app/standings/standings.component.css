@@ -1,0 +1,149 @@
+#standings-card{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#standings-title {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.efl-picture {
+    content: url("/assets/images/efl-logo.svg");
+    width: 60px;
+    height: 60px;
+}
+
+.first-place {
+    background: rgba(84, 167, 89, 0.8);
+}
+
+.second-place {
+    background: rgba(84, 167, 89, 0.6);
+}
+
+.third-place {
+    background: rgba(84, 167, 89, 0.4);
+}
+
+.relegation-place {
+    background: rgba(212, 111, 106, 0.6);
+}
+
+.team-name-column {
+    display: flex;
+    align-items: center;
+}
+
+.astonvilla-picture, .birmigham-picture, .blackburn-picture, .bolton-picture,
+.brentford-picture, .bristol-picture, .derby-picture, .hull-picture,
+.ipswich-picture, .leeds-picture, .middle-picture, .millwall-picture,
+.norwich-picture, .nottingham-picture, .preston-picture, .qpr-picture,
+.reading-picture, .rotherham-picture, .sheffield-picture, .sheffield-wednesday-picture, 
+.stoke-picture, .swansea-picture, .wba-picture , .wigan-picture{
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+}
+
+.astonvilla-picture {
+    content: url("/assets/images/logo/as_logo.svg");
+}
+
+.birmigham-picture {
+    content: url("/assets/images/logo/Birmingham_City-logo.svg");
+}
+
+.blackburn-picture {
+    content: url("/assets/images/logo/Blackburn_Rovers-logo.svg");
+}
+
+.bolton-picture {
+    content: url("/assets/images/logo/bolton-logo.svg");
+}
+
+.brentford-picture {
+    content: url("/assets/images/logo/Brentford_FC-logo.svg");
+}
+
+.bristol-picture {
+    content: url("/assets/images/logo/bristol.png");
+}
+
+.derby-picture {
+    content: url("/assets/images/logo/derby-county-logo.png");
+}
+
+.hull-picture {
+    content: url("/assets/images/logo/hull-logo.png");
+}
+
+.ipswich-picture {
+    content: url("/assets/images/logo/ipswitch.svg");
+}
+
+.leeds-picture {
+    content: url("/assets/images/logo/leeds-logo.svg");
+}
+
+.middle-picture {
+    content: url("/assets/images/logo/Middlesbrough-logo.svg");
+}
+
+.millwall-picture {
+    content: url("/assets/images/logo/millwal-logo.png");
+}
+
+.norwich-picture {
+    content: url("/assets/images/logo/norwich-logo.svg");
+}
+
+.nottingham-picture {
+    content: url("/assets/images/logo/nottingham-logo.png");
+    width: 25px;
+}
+
+.preston-picture {
+    content: url("/assets/images/logo/preston-north-logo.gif");
+}
+
+.qpr-picture {
+    content: url("/assets/images/logo/qpr-logo.svg");
+}
+
+.reading-picture {
+    content: url("/assets/images/logo/Reading-logo.svg");
+}
+
+.rotherham-picture {
+    content: url("/assets/images/logo/Rotherham-logo.png");
+}
+
+.sheffield-picture {
+    content: url("/assets/images/logo/sheffield-logo.svg");
+}
+
+.sheffield-wednesday-picture {
+    content: url("/assets/images/logo/Sheffield_Wednesday-logo.svg");
+}
+
+.stoke-picture {
+    content: url("/assets/images/logo/Stoke-logo.svg");
+}
+
+.swansea-picture {
+    content: url("/assets/images/logo/Swansea-logo.svg");
+}
+
+.wba-picture {
+    content: url("/assets/images/logo/wba-logo.svg");
+}
+
+.wigan-picture {
+    content: url("/assets/images/logo/wigan-logo.svg");
+}
+
+.points-column {
+    font-weight: bold;
+}

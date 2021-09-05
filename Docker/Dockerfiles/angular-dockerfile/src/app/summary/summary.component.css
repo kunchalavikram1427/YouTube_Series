@@ -1,0 +1,19 @@
+.aston-villa-picture {
+    content: url("/assets/images/logo/as_logo.svg");
+    width: 240px;
+    height: 240px;
+}
+
+div .card-body {
+    background-color: #95BFE5;
+    display: flex;
+}
+
+.av-position {
+    color: white;
+    font-weight: bold;
+}
+
+.av-last-match {
+    color: white;
+}

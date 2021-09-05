@@ -1,0 +1,790 @@
+Docker Hub: hub.docker.com
+Official Images: https://github.com/docker-library/official-images  (or) https://github.com/docker-library/docs  (or) https://github.com/docker-library/docs/tree/master/python
+List of commands: https://docs.docker.com/engine/reference/commandline/docker/
+References: https://docs.docker.com/engine/reference/
+Basics: https://docker-curriculum.com/
+Docker-in-docker: https://itnext.io/docker-in-docker-521958d34efd
+ngrok: https://ngrok.com/
+https://github.com/Evalle/DCA
+
+
+
+Example HTML for nginx: /usr/share/nginx/html
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to custom nginx!</title>
+</head>
+<body>
+<h1>Welcome to custom nginx!</h1>
+<p> Hello World!!!</p>
+</body>
+</html>
+
+
+---
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello World</title>
+    <style>
+      body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hello World</h1>
+    <p>Nice to meet you!</p>
+    <p><em>Thanks for stopping by...</em></p>
+  </body>
+</html>
+
+
+---------------
+Basic commands
+---------------
+docker version
+docker -v
+docker info
+docker system df
+docker system prune
+docker --help
+docker ps -> Lists all running containers only
+docker ps -a -> Lists all containers(running & exited) with unique random names
+docker ps -a -q -> List only container IDs
+
+------------
+Docker images
+------------
+docker search ubuntu
+docker history <image_name> - history of image/details of each layer
+docker pull ubuntu
+docker pull hello-world
+docker image rm <image_name> -> Removes an image
+docker rmi <image_name> -> Removes an image
+docker image prune -a > Remove all unused docker images
+
+By default, you are prompted to continue. To bypass the prompt, use the -f or --force flag.
+You can limit which images are pruned using filtering expressions with the --filter flag. 
+For example, to only consider images created more than 24 hours ago: 
+
+docker image prune -a --filter "until=24h" 
+docker image tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+docker image push <image> (need to login, see docker –help for login logout)
+docker login -u <user_name>
+docker logout
+
+------------
+Docker Registry
+------------
+registry:2
+
+https://docs.docker.com/registry/deploying/
+https://docs.docker.com/registry/spec/api/
+https://www.exoscale.com/syslog/setup-private-docker-registry/
+
+A registry can be considered private if pulling requires authentication
+
+docker login -u <user-name> -p <password> <Repo-URL>
+
+docker run -d -p 5000:5000 --restart=always --name registry2 registry:2
+docker image tag <image-name> localhost:5000/<image-name>
+docker push localhost:5000/<image-name>
+
+docker run -d -p 5000:5000 --restart=always -v $PWD:/var/lib/registry -e REGISTRY_STORAGE_DELETE_ENABLED=true --name registry2 registry:2
+
+** To avoid deletion errors
+[root@ip-172-31-7-249 ec2-user]# curl -v --silent -H "Accept: application/vnd.docker.distribution.manifest.v2+json" -X DELETE http://15.206.89.202/v2/nginx/manifests/sha256:5e95e5eb8be4322e3b3652d737371705e56809ed8b307ad68ec59ddebaaf60e4
+*   Trying 15.206.89.202:80...
+* Connected to 15.206.89.202 (15.206.89.202) port 80 (#0)
+> DELETE /v2/nginx/manifests/sha256:5e95e5eb8be4322e3b3652d737371705e56809ed8b307ad68ec59ddebaaf60e4 HTTP/1.1
+> Host: 15.206.89.202
+> User-Agent: curl/7.76.1
+> Accept: application/vnd.docker.distribution.manifest.v2+json
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 405 Method Not Allowed
+< Content-Type: application/json; charset=utf-8
+< Docker-Distribution-Api-Version: registry/2.0
+< X-Content-Type-Options: nosniff
+< Date: Wed, 18 Aug 2021 21:11:48 GMT
+< Content-Length: 78
+< 
+{"errors":[{"code":"UNSUPPORTED","message":"The operation is unsupported."}]}
+* Connection #0 to host 15.206.89.202 left intact
+
+
+Docker expects a secured channel by default, and that’s naturally a very good thing. 
+Configuring Docker to accept connections to unsecure registries depends on your OS, but it’s quite straightforward. 
+
+In order to push to insecure registries, we need to edit daemon.json file at /etc/docker/daemon.json and add the below content.
+Once edited, restart your docker daemon(systemctl restart docker)
+
+{
+"insecure-registries" : ["Repo-URL"]
+}
+
+On macOS you do it using the user interface, and the changes will automatically restart the daemon:
+
+Click on the Docker icon
+Select Preferences… in the menu
+Select the Daemon tab
+Check the checkbox named Experimental features
+In the first list box, enter the address (URL or IP) of the unsecure registry e.g. 127.0.0.1:5000
+Wait a bit for the Docker daemon to restart, then push again to the registry. This time, it should be a success:
+
+APIs for registry2 container:
+
+Get list of images: curl -X GET http://localhost:5000/v2/_catalog
+
+Get list of image tags: curl -X GET http://localhost:5000/v2/<image-name>/tags/list
+
+curl -X GET http://15.206.89.202:80/v2/nginx/tags/list
+
+Delete an image tag:
+-> First Get SHA ID for that specific tag 
+curl -v --silent -H "Accept: application/vnd.docker.distribution.manifest.v2+json" -X GET \
+http://localhost:5000/v2/<image-name>/manifests/latest 2>&1 | grep Docker-Content-Digest | awk '{print($3)}'
+
+-> Use the SHA ID to delete the image tag
+curl -v --silent -H "Accept: application/vnd.docker.distribution.manifest.v2+json" -X DELETE http://127.0.0.1:5000/v2/my-ubuntu/manifests/
+sha256:f2557f94cac1cc4509d0483cb6e302da841ecd6f82eb2e91dc7ba6cfd0c580ab
+
+
+--------
+AWS CLI
+--------
+https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html
+https://docs.aws.amazon.com/cli/latest/userguide/ 
+https://docs.aws.amazon.com/cli/latest/userguide/welcome-examples.html
+aws configure
+
+--------
+AWS ECR
+--------
+https://aws.amazon.com/ecr/
+https://aws.amazon.com/ecr/resources/
+https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html
+https://docs.aws.amazon.com/AmazonECR/latest/userguide/get-set-up-for-amazon-ecr.html
+https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-cli.html
+
+aws configure
+aws ecr create-repository --repository-name sonarqube --image-scanning-configuration scanOnPush=true --region ap-south-1
+docker tag nginx:latest 185558408682.dkr.ecr.ap-south-1.amazonaws.com/nginx:latest
+aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 185558408682.dkr.ecr.ap-south-1.amazonaws.com
+docker push 185558408682.dkr.ecr.ap-south-1.amazonaws.com/nginx
+aws ecr batch-delete-image --repository-name nginx --image-ids imageTag=latest
+aws ecr batch-delete-image --repository-name nginx --image-ids imageTag=v1
+
+--------
+AWS ECS
+--------
+https://tutorialsdojo.com/amazon-elastic-container-service-amazon-ecs/
+https://www.section.io/engineering-education/using-ecs-to-deploy-docker-app-to-aws/
+
+------------
+AWS Fargate
+------------
+https://www.janbasktraining.com/blog/what-is-aws-fargate/
+
+------------------
+Docker containers
+------------------
+Example images: 
+hello world(tutum)
+jpetazzo/clock
+Jenkins, Nexus3, Ubuntu, Nginx
+
+docker run -it ubuntu ; apt update -y ; apt-get install -y iputils-ping ; apt install figlet; figlet Devops
+Ctrl + p+q -> come out of interactive mode
+
+docker run busybox echo "hello from busybox"
+docker run -it busybox sh
+
+docker run -it ubuntu hostname
+docker run -it --name os ubuntu hostname
+
+docker commit -m "ubuntu with ping" 8ec ubuntu-ping
+docker run -it ubuntu ping 8.8.8.8
+docker run -it ubuntu-ping ping 8.8.8.8
+
+docker logs <container id> 
+docker logs -f <container id> 
+docker logs -f --tail <number> <container id> -> Get live logs one line at a time
+
+docker run -p HOST_PORT:CONTAINER_PORT -e ENV_VAR=VALUE IMAGE COMMAND
+docker run -it -p 80:5000 kunchalavikram/flask-simpledetails:v1
+
+docker container run --publish 80:80 nginx
+docker container run --publish 80:80 --detach nginx
+docker container run --publish 80:80 - d nginx
+docker container attach nginx (reattach the container to terminal/std_output)
+docker ps -> Lists all running containers only
+docker ps -a -> Lists all containers(running & exited) with unique random names
+docker ps -a -q -> List only container IDs
+docker run centos:7 -> runs centos
+docker rm <container id/name> -> remove a container
+docker rm -f $(docker ps -a -q) -> remove all containers forcefully by container IDs
+
+docker container run --publish 80:80 --name webhost nginx -> creates a container with name as webhost
+docker run -it  --rm -p 8080:3000 -p 8081:3001 -e RACK_ENV=development -e HOSTNAME=my-container <image>
+
+docker run -p HOST_PORT:CONTAINER_PORT -e ENV_VAR=VALUE IMAGE 
+docker run -d -p 3306:3306 --name db -e MYSQL_RANDOM_ROOT_PASSWORD=yes mysql
+docker run --env-file=env_file_name alpine printenv
+docker run -it --rm centos:7 curl --version
+
+docker container stop <unique container id> -> stops container
+docker container start < unique container id> -> start a stopped container
+docker container kill <unique container id> -> force kill a non-responding container
+docker container logs <container name> -> displays logs in static mode
+docker container logs -f <container name> -> displays logs in follow/live mode
+docker container rm <container 1> <container 2 -> remove docker containers; doesn’t remove running containers
+docker container rm -f <container 1> -> Force remove running containers
+docker container rm -f $(docker ps -a -q) -> Removes all containers; -q is quiet mode that displays only numeric IDs of containers
+docker rm $(docker ps -a -q -f status=exited)
+
+docker commit -m "message" <container-id> <new-image-name> -> save changes made to a container to a image
+
+docker top <container> -> Lists specific processes in a specific container
+docker container inspect <container> -> gives the config and meta data used to start this container; returns JSON array
+docker container stats <container> -> gives live info on CPU, Memory usage, I/O of the container
+docker stats -> gives live info on CPU, Memory usage, I/O of all the containers
+
+docker push <image-name>
+docker login -u <user-name>
+docker login -u <user-name> -p <password> <Repo-URL>
+
+
+-----------------
+docker volume
+-----------------
+https://docs.docker.com/storage/
+https://www.baeldung.com/ops/docker-volumes
+https://www.section.io/engineering-education/sharing-data-between-docker-containers/
+
+
+Named volumes/Docker Volumes: Can persist data after we restart or remove a container. 
+Also, it’s accessible by other containers. These volumes are created inside /var/lib/docker/volume local host directory.
+
+Bind mounts: Can persist data after we restart or remove a container. 
+As we can see, named volumes and bind mounts are the same, except the named volumes can be found under a specific host directory, and bind mounts can be any host directory.
+
+docker volume ls
+docker volume create test
+docker volume inspect test
+docker volume rm test
+docker volume prune
+
+--volumes-from
+
+Bind:
+docker run -d --name web -p 80:80 -v $PWD/index.html:/usr/share/nginx/html/index.html nginx
+docker run -d --name web -p 80:80 -v $PWD/nginx-data:/usr/share/nginx/html nginx
+
+Named:
+docker run -d --name web -p 80:80 -v nginx-data:/usr/share/nginx/html nginx     
+docker run -d -p 8080:8080 -p 50000:50000 -v jenkins-backup:/var/jenkins_home jenkins/jenkins:lts
+
+-----------------
+docker networks
+-----------------
+https://docs.docker.com/network/
+https://docs.docker.com/config/containers/container-networking/
+https://docs.docker.com/network/links/
+https://www.aquasec.com/cloud-native-academy/docker-container/docker-networking/
+https://stackoverflow.com/questions/41768157/how-to-link-containers-in-docker
+https://dev.vividbreeze.com/docker-networking-bridge-network/
+https://foxutech.com/docker-bridge-networking/
+https://runnable.com/docker/basic-docker-networking
+https://www.section.io/engineering-education/understanding-docker-networking/
+https://upcloud.com/community/tutorials/wordpress-with-docker/
+
+
+docker network --help
+docker network ls
+docker network inspect bridge
+docker container inspect <container-name>
+docker container inspect --format '{{.NetworkSettings.IPAddress}}' <container-name>
+docker network create --driver bridge my_net
+docker network create --driver bridge --subnet 182.18.0.1/24 --gateway 182.18.0.100 wp-mysqlnetwork
+docker container run -d --name new_nginx --network my_app_net nginx
+docker run -d --name web1 --network custom_bridge_01 nginx
+docker network connect <network> <app>
+docker network disconnect my_app_net webhost  -> Dynamically removes webhost from my_app_net network
+
+Install IPutils in Nginx
+docker run -d --name nginx nginx
+docker container exec -it nginx apt-get update -y && apt install inetutils-ping
+
+
+--links
+docker container run -d --name web2 nginx_ping
+docker container run -d --name web1 --link web2:web2 nginx_ping
+docker exec -it web1 bash
+root@fd4ec3dc07b3:/# ping web2
+
+--net-alias  or –-network-alias 
+
+docker network create my_net -> creates a bridge network
+docker container run -d --net my_net --net-alias search elasticsearch:2
+docker container run -d --net my_net --net-alias search elasticsearch:2
+docker container run --rm --net my_net alpine nslookup search 
+
+docker run -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=wordpress --name mysql -v db:/var/lib/mysql -d mariadb:latest
+docker run -e WORDPRESS_DB_USER=root -e WORDPRESS_DB_PASSWORD=admin --name wordpress --link mysql:mysql -p 80:80 -v wp:/var/www/html -d wordpress
+
+
+docker network create my_net
+docker run -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=wordpress --name mysql --net my_net -v db:/var/lib/mysql -d mariadb:latest
+docker run -e WORDPRESS_DB_USER=root -e WORDPRESS_DB_PASSWORD=admin --name wordpress --net my_net -p 80:80 -v nginx:/var/www/html -d wordpress
+
+
+------------------------
+Environment Variables
+------------------------
+https://vsupalov.com/docker-arg-env-variable-guide/
+https://docs.docker.com/engine/swarm/secrets/
+
+docker run -t alpine printenv
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=24400feefaba
+TERM=xterm
+HOME=/root
+
+docker run -t -e demo=devops alpine printenv
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=ef71a062a6d7
+TERM=xterm
+demo=devops
+HOME=/root
+
+docker run -t -e demo=devops -e app_dir=/tmp alpine printenv
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=4ff650c1493f
+TERM=xterm
+demo=devops
+app_dir=/tmp
+HOME=/root
+
+SYSTEM ENV
+
+[root@ip-172-31-4-240 ec2-user]# printenv
+XDG_SESSION_ID=1
+HOSTNAME=ip-172-31-4-240.ap-south-1.compute.internal
+SHELL=/bin/bash
+TERM=xterm
+HISTSIZE=1000
+USER=root
+LS_COLORS=rs=0:di=01;34:ln=01;
+SUDO_UID=1000
+USERNAME=root
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAIL=/var/spool/mail/ec2-user
+PWD=/home/ec2-user
+LANG=en_US.UTF-8
+SHLVL=1
+SUDO_COMMAND=/bin/su
+HOME=/root
+LOGNAME=root
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+SUDO_GID=1000
+[root@ip-172-31-4-240 ec2-user]# echo $SUDO_GID
+1000
+[root@ip-172-31-4-240 ec2-user]# echo $HOME
+/root
+[root@ip-172-31-4-240 ec2-user]# exit
+exit
+[ec2-user@ip-172-31-4-240 ~]$ echo $HOME
+/home/ec2-user
+
+
+docker run --env VARIABLE1=foobar alpine:3 env
+docker run --rm -it --env-file config alpine env
+docker run --rm -it --env-file details alpine env
+docker run --rm -it -e DEPLOYMENT=dev -e APIKEY='cewwetgghgggg' -e AWS_USER=ec2-user alpine env
+ 
+
+$ echo VARIABLE1=foobar1 > my-env.txt
+$ echo VARIABLE2=foobar2 >> my-env.txt
+$ echo VARIABLE3=foobar3 >> my-env.txt
+
+Take environment values from a file (env_file): docker run --env-file my-env.txt alpine:3 env
+
+Pass environment variable values from your host: docker run -e env_var_name alpine env
+
+
+-----------
+dockerfile
+-----------
+https://github.com/docker-library/official-images
+https://docs.docker.com/engine/reference/builder/
+http://tutorials.jenkov.com/docker/dockerfile.html
+https://vsupalov.com/docker-arg-env-variable-guide/
+https://codefresh.io/docker-tutorial/not-ignore-dockerignore-2/
+https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
+
+https://docs.docker.com/language/
+
+https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+https://sysdig.com/blog/dockerfile-best-practices/
+https://cloud.google.com/architecture/best-practices-for-building-containers
+https://docs.microsoft.com/en-us/visualstudio/docker/tutorials/docker-tutorial
+https://developer.cisco.com/docs/iox/#!tutorial-build-sample-docker-type-python-simple-app/tutorial-build-sample-docker-type-python-simple-app
+https://www.section.io/engineering-education/how-to-containerize-a-python-application/
+https://scoutapm.com/blog/how-to-use-docker-healthcheck
+
+https://github.com/kunchalavikram1427/voting-app
+https://www.indellient.com/blog/how-to-dockerize-an-angular-application-with-nginx/
+https://wkrzywiec.medium.com/build-and-run-angular-application-in-a-docker-container-b65dbbc50be8
+https://codefresh.io/docker-tutorial/create-docker-images-for-java/
+
+
+https://acloudxpert.com/install-maven-on-amazon-linux-rhel/
+
+mvn clean package
+java -jar target/demo-0.0.1-SNAPSHOT.jar
+ 
+https://docs.docker.com/develop/develop-images/multistage-build/
+https://www.ardanlabs.com/blog/2020/02/docker-images-part1-reducing-image-size.html
+
+Custom Nginx:
+
+FROM nginx
+COPY index.html /usr/share/nginx/html/index.html
+
+
+
+FROM,ARG,ENV,LABEL,MAINTAINER,WORKDIR,VOLUME,RUN,ADD,COPY,EXPOSE,CMD,ENTRYPOINT,HEALTHCHECK,ONBUILD
+
+Shell form:
+CMD sleep 10
+
+JSON/Executable form:
+CMD ["sleep", "10"]]
+
+docker build -t flaskapp .
+docker build -t test -f Dockerfile_dev .  -> if Dockerfile name is different
+docker build --no-cache -t test -f DockerfileTest .  -> Build without taking previous build cache into consideration
+docker build --target <build-stage-name> -t <image-tag> .  -> Build till a specific stage in multi stage build
+docker build --build-arg some_variable_name=a_value -> Build with Arguments
+docker build -t test --build-arg SERVICE_NAME=metadata-service --build-arg PORT=2020 --target builder .
+
+Health Status: docker container inspect --format '{{ .State.Health.Status }}' web
+
+--------------------
+docker compose
+--------------------
+https://docs.docker.com/compose/networking/
+https://vsupalov.com/docker-arg-env-variable-guide/
+https://takacsmark.com/docker-compose-tutorial-beginners-by-example-basics/
+https://github.com/kunchalavikram1427/voting-app
+https://github.com/dockersamples/example-voting-app
+
+.env file-> a file with key value pairs used to put values into the docker-compose.yml & docker stack file which is in the same folder. 
+It’s exclusively a docker-compose.yml thing.
+
+.env
+VARIABLE_NAME=some value
+OTHER_VARIABLE_NAME=some other value, like 5
+
+USAGE:
+version: '3'
+services:
+  plex:
+    image: linuxserver/plex
+      environment:
+        - env_var_name=${VARIABLE_NAME} # here it is
+
+
+Compose file Example:
+version: '3'
+services:
+  web01:
+    image:
+	container_name:
+	hostname:
+	environment:
+	  - "home:/home"
+	env_file: env_file_name
+	depends_on:
+	  - web02
+	volumes:
+	  - "vol-01:/var/lib/"
+	networks:
+	  - front-end
+	  - back-end
+	ports:
+	  - 80:80
+	  
+  web02:
+	build:
+	  context: ./java
+	  dockerfile: my-dockerfile
+	  args:
+	    - repo: my-repo
+	    - build: 01
+    	image: web02
+	container_name:
+	hostname:
+	environment:
+	  - HOME=/home 
+	volumes:
+	  - "vol-01:/var/lib/"
+	networks:
+	  - front-end
+	ports:
+	  - 80:80    
+  
+volumes:
+  vol-01
+
+networks:
+  front-end
+  back-end
+
+Building Image Using Docker Compose:
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      args:
+        - IMAGE_VERSION=3.7.0-alpine3.8
+    image: takacsmark/flask-redis:1.0
+    environment:
+      - FLASK_ENV=development
+    ports:
+      - 5000:5000
+  redis:
+    image: redis:4.0.11-alpine
+
+Use env_file to pass environment variables:
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      args:
+        - IMAGE_VERSION=3.7.0-alpine3.8
+    image: takacsmark/flask-redis:1.0
+    env_file: .env.txt
+    ports:
+      - 80:5000
+    networks:
+      - mynet
+  redis:
+    image: redis:4.0.11-alpine
+    networks:
+      - mynet
+    volumes:
+      - mydata:/data
+networks:
+  mynet:
+volumes:
+  mydata:
+
+
+.env file:
+PYTHON_VERSION=3.7.0-alpine3.8
+REDIS_VERSION=4.0.11-alpine
+DOCKER_USER=admin
+
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      args:
+        - IMAGE_VERSION=${PYTHON_VERSION}
+    image: ${DOCKER_USER}/flask-redis:1.0
+    env_file: .env.txt
+    ports:
+      - 80:5000
+    networks:
+      - mynet
+  redis:
+    image: redis:${REDIS_VERSION}
+    networks:
+      - mynet
+    volumes:
+      - mydata:/data
+networks:
+  mynet:
+volumes:
+  mydata:
+
+docker-compose config - Shows final docker-compose file after replacing varibles from .env file
+docker-compose -f docker-compose.yml down
+docker-compose -f docker-compose-01.yml ps
+docker-compose -f docker-compose-01.yml top  
+docker-compose -f docker-compose.yml build --no-cache
+docker-compose build elasticsearch
+docker-compose -f docker-compose.yml build --no-cache config-service
+docker-compose up -d
+docker-compose up -d --build
+docker-compose --env-file <env-file> -f <compose-file> up -d  
+docker-compose down
+docker-compose -f docker-compose.yml down
+  
+
+--------------
+docker-swarm
+--------------
+https://docs.docker.com/engine/swarm/
+https://docs.docker.com/engine/swarm/swarm-tutorial/
+https://docs.docker.com/engine/swarm/swarm-tutorial/#open-protocols-and-ports-between-the-hosts
+https://github.com/jpetazzo/container.training/blob/main/slides/swarm/healthchecks.md
+https://docs.docker.com/engine/swarm/services/#placement-constraints
+https://thenewstack.io/methods-dealing-container-storage/
+https://theworkaround.com/2019/05/15/docker-swarm-persistent-storage.html
+
+
+
+#! /bin/bash
+sudo yum update -y
+sudo yum install docker
+sudo usermod -aG docker ec2-user
+sudo systemctl enable --now docker
+
+
+docker service create \
+  --name=viz \
+  --publish=8080:8080/tcp \
+  --constraint=node.role==manager \
+  --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
+    dockersamples/visualizer
+
+docker swarm init --advertise-addr MANAGER_IP
+docker swarm join-token manager
+docker node ls
+docker service create --replicas 5 -p 80:80 --name <service_name> <image_name>
+docker service create --replicas 5 -p 80:80 --name web nginx
+
+docker service ls
+docker service ps <service-name>
+docker node ps
+docker node ps <node-name>
+docker node inspect self or master1 or worker1
+
+docker service scale <service_name>=8
+docker service rm <service_name>
+docker service update --force <service_name>
+docker service update --image nginx:1.14.0 --replicas 15 <service_name>
+docker service update --image <new_image> --update-parallelism 2 --update-delay 10s <service_name>
+docker service update --rollback <service_name>
+
+docker node update --availability drain Manager-1
+docker node update --availability active Manager-1
+
+docker node promote	- Promote one or more nodes to manager in the swarm
+docker node demote	- Demote one or more nodes from manager in the swarm
+
+docker swarm leave
+
+-----------------
+overlay networks
+-----------------
+docker network create -d overlay my_overlay
+docker network create --subnet 10.1.0.0/24 --gateway 10.1.0.1 -d overlay mynet -> Create an overlay network and specify a subnet
+docker service create --name psql --network my_overlay -e POSTGRES_PASSWORD=pass postgres
+docker service create --name drupal --network my_overlay -p 80:80 drupal
+
+--------------------
+docker stack deploy
+--------------------
+docker stack deploy -c <docker-compose.yml> <stack-name>
+docker stack ls
+docker stack ps <stack-name>
+docker service ls
+docker stack rm <stack-name>
+
+
+version: '3.3'
+  services:
+	wordpress:
+		image: wordpress
+	depends_on:
+		- mysql
+	ports:
+		- 80:80
+	deploy:
+		replicas: 2
+		placement:
+			constraints:
+				- node.role == manager
+	environment:
+		WORDPRESS_DB_HOST: mysql
+		WORDPRESS_DB_NAME: wordpress
+		WORDPRESS_DB_USER: wordpress
+		WORDPRESS_DB_PASSWORD: wordpress
+	volumes:
+		- wordpress-data:/var/www/html
+	networks:
+		- my_net
+
+networks:
+	my_net:
+volumes:
+	wordpress-data:
+
+
+---------------------
+Best vs Bad practices for Dockerfile
+---------------------
+
+RUN apt-get update -y && \
+    apt-get autoremove -y && \
+    apt-get install --no-install-recommends lsb-release && \
+    tar -xvf archive.tar.gz &&\
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf archive.tar.gz
+
+RUN apt-get update
+RUN apt-get autoremove -y
+RUN apt-get install lsb-release
+RUN tar -xvf archive.tar.gz
+
+
+----------------------
+Load Balancing
+----------------------
+https://superuser.openstack.org/articles/run-load-balanced-service-docker-containers-openstackmic
+
+
+docker run -d --name hello1 -p 8080:80 tutum/hello-world
+docker run -d --name hello2 -p 8081:80 tutum/hello-world
+docker run -d --name hello3 -p 8082:80 tutum/hello-world
+docker run -d --name reverse-proxy -p 80:80 nginx
+
+docker exec -it reverse-proxy /bin/bash
+
+Change the config file /etc/nginx/conf.d/default.conf and add the below content.
+IPs represent the EC2 public IP
+
+upstream servers {
+server 15.206.89.202:8080;
+server 15.206.89.202:8081;
+server 15.206.89.202:8082;
+
+}
+
+# This server accepts all traffic to the port 80 and passes it to the upstream.
+# Notice that the upstream name and the proxy_pass need to match.
+
+server {
+listen 80;
+
+location / {
+proxy_pass http://servers;
+}
+}
+
+docker restart reverse-proxy
+Access the application at: http://15.206.89.202/
+
+	

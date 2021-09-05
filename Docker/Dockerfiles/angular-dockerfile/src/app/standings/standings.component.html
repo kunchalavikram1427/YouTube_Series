@@ -1,0 +1,37 @@
+<div class="card" id="standings-card">
+    <div class="card-body">
+      <h5 class="card-title" id="standings-title"><span class="efl-picture"></span>EFL Championship standings</h5>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Team</th>
+            <th>Played</th>
+            <th>Pts</th>
+            <th>Wins</th>
+            <th>Draws</th>
+            <th>Loses</th>
+            <th>GF</th>
+            <th>GA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let standing of standings" [ngClass]="setRowColor(standing.overall_league_position)">
+            <td>{{standing.overall_league_position}}</td>
+            <td class="team-name-column"><span [ngClass]="setLogo(standing.team_name)"></span>{{standing.team_name}}</td>
+            <td>{{standing.overall_league_payed}}</td>
+            <td class="points-column">{{standing.overall_league_PTS}}</td>
+            <td>{{standing.overall_league_W}}</td>
+            <td>{{standing.overall_league_D}}</td>
+            <td>{{standing.overall_league_L}}</td>
+            <td>{{standing.overall_league_GF}}</td>
+            <td>{{standing.overall_league_GA}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>
+  
+  
+  
+

@@ -1,0 +1,13 @@
+  
+# Configure HAProxy to listen on port 80
+frontend http_front
+   bind *:80
+   default_backend http_back
+
+# Configure HAProxy to route requests to swarm nodes on port 8080
+backend http_back
+   balance roundrobin
+   mode http
+   server srv1 192.168.0.101:30001 
+   server srv2 192.168.0.103:30001 
+   server srv3 192.168.0.105:30001 

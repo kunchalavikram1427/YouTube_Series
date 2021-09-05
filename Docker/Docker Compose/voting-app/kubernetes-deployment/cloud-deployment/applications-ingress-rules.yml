@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: application-ingress-rules
+  namespace: vote
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: voting-app.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: vote
+            port:
+              number: 80
+  - host: result-app.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: result
+            port:
+              number: 80
