@@ -639,10 +639,17 @@ https://docs.docker.com/engine/swarm/
 https://docs.docker.com/engine/swarm/swarm-tutorial/
 https://docs.docker.com/engine/swarm/swarm-tutorial/#open-protocols-and-ports-between-the-hosts
 https://github.com/jpetazzo/container.training/blob/main/slides/swarm/healthchecks.md
+https://hub.docker.com/r/dockersamples/visualizer
+https://docs.docker.com/engine/swarm/raft/
 https://docs.docker.com/engine/swarm/services/#placement-constraints
 https://thenewstack.io/methods-dealing-container-storage/
 https://theworkaround.com/2019/05/15/docker-swarm-persistent-storage.html
 
+TCP port 2377 for cluster management communications
+TCP and UDP port 7946 for communication among nodes
+UDP port 4789 for overlay network traffic
+
+yum update && yum install docker -y && systemctl enable --now docker
 
 
 #! /bin/bash
@@ -658,6 +665,15 @@ docker service create \
   --constraint=node.role==manager \
   --mount=type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock \
     dockersamples/visualizer
+
+
+docker pull kunchalavikram/flask-simpledetails
+
+docker service create \
+--name demo \
+-p 80:5000 \
+--replicas 5 \
+kunchalavikram/flask-simpledetails:v1
 
 docker swarm init --advertise-addr MANAGER_IP
 docker swarm join-token manager
@@ -675,11 +691,12 @@ docker service scale <service_name>=8
 docker service rm <service_name>
 docker service update --force <service_name>
 docker service update --image nginx:1.14.0 --replicas 15 <service_name>
+docker service update --image kunchalavikram/flask-simpledetails:v2 --replicas 10 demo
 docker service update --image <new_image> --update-parallelism 2 --update-delay 10s <service_name>
 docker service update --rollback <service_name>
 
-docker node update --availability drain Manager-1
-docker node update --availability active Manager-1
+docker node update --availability drain <node-id>
+docker node update --availability active <node-id>
 
 docker node promote	- Promote one or more nodes to manager in the swarm
 docker node demote	- Demote one or more nodes from manager in the swarm
@@ -705,32 +722,53 @@ docker stack rm <stack-name>
 
 
 version: '3.3'
-  services:
-	wordpress:
-		image: wordpress
-	depends_on:
-		- mysql
-	ports:
-		- 80:80
-	deploy:
-		replicas: 2
-		placement:
-			constraints:
-				- node.role == manager
-	environment:
-		WORDPRESS_DB_HOST: mysql
-		WORDPRESS_DB_NAME: wordpress
-		WORDPRESS_DB_USER: wordpress
-		WORDPRESS_DB_PASSWORD: wordpress
-	volumes:
-		- wordpress-data:/var/www/html
-	networks:
-		- my_net
-
+services:
+  wordpress:
+    image: wordpress
+    depends_on:
+      - mysql
+    ports:
+      - 80:80
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager 
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+      - wordpress-data:/var/www/html
+    networks: 
+      - my_net
+  mysql:
+    image: mariadb
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == worker 
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress    
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks: 
+      - my_net
 networks:
-	my_net:
+  my_net:
+
 volumes:
-	wordpress-data:
+  mysql-data:
+  wordpress-data:
 
 
 ---------------------

@@ -1,0 +1,60 @@
+version: '3.3'
+services:
+  wordpress:
+    image: wordpress
+    depends_on:
+      - mysql
+    ports:
+      - 8080:80
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+          - node.role == manager 
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+      - wordpress-data:/var/www/html
+    networks: 
+      - my_net
+  mysql:
+    image: mariadb
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == worker 
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress    
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks: 
+      - my_net
+  
+  viz:
+    image: dockersamples/visualizer
+    ports:
+    - 8090:8080
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager 
+    volumes:
+      - /var/run/docker.sock:var/run/docker.sock
+    networks: 
+      - my_net
+
+networks:
+  my_net:
+
+volumes:
+  mysql-data:
+  wordpress-data:
+  
