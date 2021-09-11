@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - mysql
+    ports:
+      - 8080:80
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+      - ./wordpress_data:/var/www/html  
+  mysql:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    restart: always
+

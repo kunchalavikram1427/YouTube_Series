@@ -1,0 +1,18 @@
+{
+    "name": "Martin",
+    "job": "Developer",
+    "skill": "Elite",
+    "employed": true,
+    "foods": [
+      "Apple",
+      "Orange",
+      "Strawberry",
+      "Mango"
+    ],
+    "languages": {
+      "perl": "Elite",
+      "python": "Elite",
+      "pascal": "Lame"
+    },
+    "education": "4 GCSEs\n3 A-Levels\nBSc in the Internet of Things\n"
+  }

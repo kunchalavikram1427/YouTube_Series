@@ -1,0 +1,13 @@
+---
+integer: 99
+float: 99.887
+exponential: 1.414e+3
+integer: 123
+octal: 0123
+hexa: 0x123
+not_a_number: .NAN
+infinity: .inf
+negative_infinity: -.inf
+string1: Hello there, this is vikram and I teach DevOps
+string2: Hello there, this is vikram and \n I teach DevOps # Escape sequences are not evaluated
+string3: "Hello there, this is vikram and \n I teach DevOps" # Escape sequences are evaluated if enclosed in quotes

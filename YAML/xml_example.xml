@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<data>
+  <name>Martin</name>
+  <job>Developer</job>
+  <skill>Elite</skill>
+  <employed>true</employed>
+  <foods>Apple</foods>
+  <foods>Orange</foods>
+  <foods>Strawberry</foods>
+  <foods>Mango</foods>
+  <languages>
+    <perl>Elite</perl>
+    <python>Elite</python>
+    <pascal>Lame</pascal>
+  </languages>
+  <education><education>4 GCSEs3 A-LevelsBSc in the Internet of Things</education>
+</data>
+</root>

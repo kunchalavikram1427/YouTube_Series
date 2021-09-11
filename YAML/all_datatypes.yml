@@ -1,0 +1,147 @@
+---
+# An employee record
+name: Martin
+job: Developer
+skill: Elite
+employed: True
+foods:
+  - Apple
+  - Orange
+  - Strawberry
+  - Mango
+languages:
+  perl: Elite
+  python: Elite
+  pascal: Lame
+education: |
+  4 GCSEs
+  3 A-Levels
+  BSc in the Internet of Things
+
+---
+ name: "Vikram"
+ address: "Bangalore, India"
+ age: 28
+ is_working: true
+ certifications: 8
+ hobbies:
+   - blogging
+   - cricket
+   - graphics_design
+   - teaching
+ work_experiece:
+   company_01:
+     years: 2
+     role: "Junior DevOps Engineer"
+   company_02: 
+     years: 4
+     role: "Senior DevOps Engineer"
+   company_03: 
+     years: 3.5
+     role: "DevOps Architect"
+ social_accounts: 
+     facebook: 1
+     youtube: 2
+---
+cities:
+  - Bratislava
+  - Kosice
+  - Trnava
+  - Moldava
+  - Trencin
+---
+companies:
+  - Eset
+  - Slovnaft
+  - Duslo Sala
+  - Matador Puchov
+---
+foo: True
+bar: False
+device1: On
+device2: Off
+isActive: Yes
+isEligible: No
+
+---
+list_01: [ 1, 2, 3 ]
+list_02:
+  - 4
+  - 5
+  - 6
+list_03:
+  - "one"
+  - "two"
+  - "three"
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    name: http
+  - port: 443
+    name: https
+  - port: ~
+list_04:
+  - employee_01:
+      name: Vikram
+      age: 26
+      role: DevOps Engineer
+  - employee_02:
+      name: Steven
+  - employee_03:
+
+---
+name: ~
+age: null
+---
+data_01:
+  name: Vikram
+  age: 26
+  role: DevOps_Engineer
+data_02: { name: Vikram, age: 26, role: DevOps_Engineer }
+data_03:
+  details: 
+    name: Vikram
+    age: 26
+    role: DevOps_Engineer
+  certifications:
+    - CKA
+    - CKAD
+    - CKS
+    - DCA
+---    
+string_with_fold: >-
+  This is vikram
+  and I work as
+  DevOps Engineer.
+string_with_pipe: |-
+  This is vikram
+  and I work as
+  DevOps Engineer.
+
+---
+services:
+  wordpress:
+    image: wordpress:latest
+    restart: &restart_policy always
+    environment: &env_vars
+      app: webservice
+      env: production
+  mysql:
+    image: mysql:3.8
+    restart: *restart_policy
+    environment: *env_vars
+---
+services:
+  wordpress:
+    image: wordpress:latest
+    restart: &restart_policy always
+    environment: &env_vars
+      app: webservice
+      env: production
+  mysql:
+    image: mysql:3.8
+    restart: *restart_policy
+    environment: 
+      <<: *env_vars
+      type: database
