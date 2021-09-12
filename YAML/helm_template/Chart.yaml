@@ -1,0 +1,6 @@
+apiVersion: v2
+name: demo-template-01
+appVersion: "1.0"
+description: A Demo Helm template
+version: 1.0.0
+type: application

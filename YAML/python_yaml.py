@@ -11,7 +11,6 @@ with open('all_datatypes.yml') as f:
 
 # Python dump() method serializes a Python object into a YAML stream
 
-
 users = [{'name': 'John Doe', 'occupation': 'gardener'},
          {'name': 'Lucy Black', 'occupation': 'teacher'}] # List of dictionaries
 print(type(users)) # <class 'list'>

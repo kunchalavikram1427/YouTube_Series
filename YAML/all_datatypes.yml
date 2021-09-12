@@ -62,7 +62,12 @@ device1: On
 device2: Off
 isActive: Yes
 isEligible: No
-
+random_key_1: True
+random_key_2: On
+random_key_3: Yes
+random_key_4: False
+random_key_5: Off
+random_key_6: No
 ---
 list_01: [ 1, 2, 3 ]
 list_02:
@@ -89,11 +94,54 @@ list_04:
   - employee_02:
       name: Steven
   - employee_03:
-
+---
+programming_languages:
+  - Python
+  - JavaScript
+  - C
+  - HTML
+  - CSS
+libraries:
+  - React
+  - CSS
+---
+# List of Dictionaries
+programming_languages:
+- Python:
+    author: Guido van Rossum
+- JavaScript:
+    author: Brendan Eich
+- C:
+    author: Dennis Ritchie
+libraries:
+- React:
+    popularity: High
+- CSS:
+    popularity: High
+---
+# Set
+set_elements: !!set
+  ? 1
+  ? 2
+  ? 2
+  ? Vikram
+  ? DevOps
+  ? Vikram
 ---
 name: ~
 age: null
 ---
+# Block vs Flow
+color: 
+  - red
+  - yellow
+  - blue
+color:  [red, yellow, blue]
+data:
+  name: Vikram
+  age: 26
+data: { name: Vikram, age: 26 }
+--- 
 data_01:
   name: Vikram
   age: 26
