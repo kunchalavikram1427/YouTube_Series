@@ -16,12 +16,12 @@ $ mv /tmp/config ~/.kube/config
 Example: mv ~/new-kube-onfig ~/.kube/config
 ```
 
-### (optional) Delete the backup after testing the merged config file
-```
-$ rm ~/.kube/config.bak
-```
-
 ### Get Clusters
 ```
 $ kubectl config get-clusters
+```
+
+### Delete the backup after testing the merged config file(optional) 
+```
+$ rm ~/.kube/config.bak
 ```
