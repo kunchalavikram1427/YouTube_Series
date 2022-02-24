@@ -1,6 +1,8 @@
 # Merge Kubernetes kubectl config files
 ### Make a copy of existing config files
+```
 $ cp ~/.kube/config ~/.kube/config.bak
+```
 
 ### Merge the two config files together into a new config file
 ```
