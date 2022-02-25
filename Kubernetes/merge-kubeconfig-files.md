@@ -90,5 +90,5 @@ minikube
 ### Test Applications
 ```
 kubectl run hello-minikube-01 --image=gcr.io/google_containers/echoserver:1.4 --port=8080
-kubectl expose pod hello-minikube --type=NodePort
+kubectl expose pod hello-minikube-01 --type=NodePort
 ```
