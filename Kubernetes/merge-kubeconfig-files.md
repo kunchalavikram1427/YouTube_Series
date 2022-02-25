@@ -52,11 +52,38 @@ $ mv /tmp/config ~/.kube/config
 ```
 ### Get Clusters
 ```
+$ kubectl config --help
+$ kubectl config view
+$ kubectl config view --minify
 $ kubectl config get-clusters
 $ kubectl config get-users
 $ kubectl config current-context
+$ kubectl config set-context <CONTEXT_NAME> --namespace=dev
+$ kubectl config set-context $(kubectl config current-context) --namespace=dev
+$ kubectl config use-context <CONTEXT_NAME>
 ```
 ### Delete the backup after testing the merged config file(optional) 
 ```
 $ rm ~/.kube/config.bak
+```
+
+### Example outputs
+```
+C:\Users\vikram>kubectl config get-users
+NAME
+minikube
+test
+
+C:\Users\vikram>kubectl config get-clusters
+NAME
+minikube
+test
+
+C:\Users\vikram>kubectl config get-contexts
+CURRENT   NAME       CLUSTER    AUTHINFO   NAMESPACE
+*         minikube   minikube   minikube   default
+          test       test       test
+
+C:\Users\vikram>kubectl config current-context
+minikube
 ```
