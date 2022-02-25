@@ -8,8 +8,8 @@ $ cp ~/.kube/config ~/.kube/config.bak
 ```
 $ KUBECONFIG=~/.kube/config:/path/to/new/config kubectl config view --flatten > /tmp/config
 ```
-Example: KUBECONFIG=~/.kube/config:~/Downloads/civo-test-kubeconfig kubectl config view --flatten > ~/new-kube-onfig
-
+_Example: KUBECONFIG=~/.kube/config:~/Downloads/civo-test-kubeconfig kubectl config view --flatten > ~/new-kube-onfig
+_
 
 ### Replace the old config file with the new merged config file
 ```
