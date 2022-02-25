@@ -1,7 +1,7 @@
 
 # Merge Kubernetes kubectl config files
 
-###  What is Kubernetes Config file
+###  Kubectl Config file(man page)
 
     Modify kubeconfig files using subcommands like "kubectl config set current-context my-context"
     
@@ -42,11 +42,11 @@
 ```
 $ cp ~/.kube/config ~/.kube/config.bak
 ```
-### Merge the two config files together into a new config file
+### Merge the two config files together into a new config file as save it as a new file
 ```
 $ KUBECONFIG=~/.kube/config:/path/to/new/config kubectl config view --flatten > /tmp/config
 ```
-### Replace the old config file with the new merged config file
+### Replace the old config file with the brand new merged config file from the previous step
 ```
 $ mv /tmp/config ~/.kube/config
 ```
@@ -54,7 +54,7 @@ $ mv /tmp/config ~/.kube/config
 ```
 $ rm ~/.kube/config.bak
 ```
-### Kubectl commands to manage clusters & contexts
+### Kubectl commands to manage Clusters & Contexts
 ```
 $ kubectl config --help
 $ kubectl config view
