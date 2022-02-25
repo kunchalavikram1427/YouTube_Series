@@ -50,7 +50,11 @@ $ KUBECONFIG=~/.kube/config:/path/to/new/config kubectl config view --flatten > 
 ```
 $ mv /tmp/config ~/.kube/config
 ```
-### Get Clusters
+### Delete the backup after testing the merged config file(optional) 
+```
+$ rm ~/.kube/config.bak
+```
+### Kubectl commands to manage clusters & contexts
 ```
 $ kubectl config --help
 $ kubectl config view
@@ -62,11 +66,6 @@ $ kubectl config set-context <CONTEXT_NAME> --namespace=dev
 $ kubectl config set-context $(kubectl config current-context) --namespace=dev
 $ kubectl config use-context <CONTEXT_NAME>
 ```
-### Delete the backup after testing the merged config file(optional) 
-```
-$ rm ~/.kube/config.bak
-```
-
 ### Example outputs
 ```
 C:\Users\vikram>kubectl config get-users
