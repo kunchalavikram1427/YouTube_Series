@@ -10,6 +10,9 @@ sudo systemctl enable --now docker
 
 ### Install Kubectl
 ```
+https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+```
+```sh
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 mv kubectl /bin/kubectl
 chmod a+x /bin/kubectl
