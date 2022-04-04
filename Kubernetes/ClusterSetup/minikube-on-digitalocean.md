@@ -1,4 +1,4 @@
-# Minikube on AWS
+# Minikube on DigitalOcean
 
 > In this demo we will cover the installation of Minikube on Ubuntu 21
 
