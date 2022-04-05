@@ -17,15 +17,20 @@ kubectl expose pod web-server --type=LoadBalancer
 kubectl delete po web-server
 kubectl delete svc web-server
 ```
-### Install Jenkins
+### Install Jenkins Helm Chart
 ```
 helm repo add jenkinsci https://charts.jenkins.io/
 helm pull --untar jenkinsci/jenkins
 helm install jenkins jenkins/
-
+```
+### Decode Jenkins login credentials
+```
 kubectl get secret jenkins --namespace=default -o go-template='
 {{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
-
+```
+### Uninstall Jenkins release
+```
+helm uninstall jenkins
 ```
 ### Authors
 Vikram K
