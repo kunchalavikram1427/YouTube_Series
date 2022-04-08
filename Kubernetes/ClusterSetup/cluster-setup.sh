@@ -33,3 +33,11 @@ EOF
 apt-get update -y
 apt-get install -y kubelet kubeadm kubectl kubernetes-cni
 apt-mark hold kubelet kubeadm kubectl
+
+echo "Checking node type"
+node="$1"
+
+if [ "$node" = "master" ]; then
+    echo "Pulling kubeadm dependent images on master node"
+    kubeadm config images pull
+fi
