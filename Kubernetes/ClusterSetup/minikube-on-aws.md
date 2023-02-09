@@ -1,11 +1,15 @@
 # Minikube on AWS
 
-### Install docker
+### Install docker on EC2(t2.medium and AMI Linux 2)
 ```
 sudo yum update -y
 sudo yum install docker -y
 sudo systemctl status docker
 sudo systemctl enable --now docker
+sudo usermod -aG docker ec2-user
+newgrp docker
+sudo systemctl restart docker
+docker ps
 ```
 
 ### Install Kubectl
