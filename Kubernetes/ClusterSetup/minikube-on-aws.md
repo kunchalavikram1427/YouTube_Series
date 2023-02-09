@@ -27,7 +27,6 @@ https://minikube.sigs.k8s.io/docs/drivers/none/#requirements
 Kubernetes v1.24 dropped support for Dockershim, so if you want to use the combination of the none driver, Kubernetes v1.24+, and the Docker container runtime you'll need to install cri-dockerd on your system, as listed in our requirements page. Follow `https://github.com/Mirantis/cri-dockerd#build-and-install`
 ```
 yum install git -y
-
 ```
 ```
 # Run these commands as root
