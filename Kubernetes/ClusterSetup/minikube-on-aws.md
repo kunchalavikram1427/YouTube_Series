@@ -24,9 +24,29 @@ https://aws.plainenglish.io/running-kubernetes-using-minikube-cluster-on-the-aws
 https://minikube.sigs.k8s.io/docs/start/
 https://minikube.sigs.k8s.io/docs/drivers/none/#requirements
 ```
-Kubernetes v1.24 dropped support for Dockershim, so if you want to use the combination of the none driver, Kubernetes v1.24+, and the Docker container runtime you'll need to install cri-dockerd on your system, as listed in our requirements page.
+Kubernetes v1.24 dropped support for Dockershim, so if you want to use the combination of the none driver, Kubernetes v1.24+, and the Docker container runtime you'll need to install cri-dockerd on your system, as listed in our requirements page. Follow `https://github.com/Mirantis/cri-dockerd#build-and-install`
 ```
-https://github.com/Mirantis/cri-dockerd#build-and-install
+yum install git -y
+
+```
+```
+# Run these commands as root
+###Install GO###
+wget https://storage.googleapis.com/golang/getgo/installer_linux
+chmod +x ./installer_linux
+./installer_linux
+source ~/.bash_profile
+
+cd cri-dockerd
+mkdir bin
+go build -o bin/cri-dockerd
+mkdir -p /usr/local/bin
+install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/cri-dockerd
+cp -a packaging/systemd/* /etc/systemd/system
+sed -i -e 's,/usr/bin/cri-dockerd,/usr/local/bin/cri-dockerd,' /etc/systemd/system/cri-docker.service
+systemctl daemon-reload
+systemctl enable cri-docker.service
+systemctl enable --now cri-docker.socket
 ```
 
 ```
