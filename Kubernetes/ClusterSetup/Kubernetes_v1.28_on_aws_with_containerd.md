@@ -33,8 +33,8 @@ sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 ```
 #### Install Containerd
 ```
-wget https://github.com/containerd/containerd/releases/download/v1.6.16/containerd-1.6.16-linux-amd64.tar.gz
-tar Cxzvf /usr/local containerd-1.6.16-linux-amd64.tar.gz
+wget https://github.com/containerd/containerd/releases/download/v1.7.4/containerd-1.7.4-linux-amd64.tar.gz
+tar Cxzvf /usr/local containerd-1.7.4-linux-amd64.tar.gz
 wget https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
 mkdir -p /usr/local/lib/systemd/system
 mv containerd.service /usr/local/lib/systemd/system/containerd.service
@@ -44,7 +44,7 @@ systemctl enable --now containerd
 
 #### Install Runc
 ```
-wget https://github.com/opencontainers/runc/releases/download/v1.1.4/runc.amd64
+wget https://github.com/opencontainers/runc/releases/download/v1.1.9/runc.amd64
 install -m 755 runc.amd64 /usr/local/sbin/runc
 ```
 
@@ -57,7 +57,7 @@ tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.2.0.tgz
 
 #### Install CRICTL
 ```
-VERSION="v1.26.0" # check latest version in /releases page
+VERSION="v1.28.0" # check latest version in /releases page
 wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz
 sudo tar zxvf crictl-$VERSION-linux-amd64.tar.gz -C /usr/local/bin
 rm -f crictl-$VERSION-linux-amd64.tar.gz
@@ -100,7 +100,7 @@ EOF
 apt update -y
 apt install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
-sudo apt-mark hold kubelet kubeadm kubectl
+kubeadm version
 ```
 
 ## Run on Master Node and follow the instructions
