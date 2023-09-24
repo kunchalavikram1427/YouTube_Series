@@ -124,6 +124,12 @@ kubeadm join \
 ## Test the setup
 ```
 kubectl get nodes
+NAME               STATUS   ROLES           AGE     VERSION
+NODENAME           Ready    control-plane   3m34s   v1.28.2
+NODENAME           Ready    <none>          8s      v1.28.2
+******
+```
+```
 kubectl get pods -A
 ```
 
