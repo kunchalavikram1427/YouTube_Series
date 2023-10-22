@@ -71,7 +71,7 @@ sudo yum install java-17-amazon-corretto-jmods
 ```
 The installation location is /usr/lib/jvm/java-17-amazon-corretto.<cpu_arch>.
 
-## Verify Your Installation
+## Verify your installation
 In the terminal, run the following command to verify the installation.
 ```
 java -version
@@ -83,7 +83,8 @@ OpenJDK Runtime Environment Corretto-8.232.09.1 (build 1.8.0_232-b09)
 OpenJDK 64-Bit Server VM Corretto-8.232.09.1 (build 25.232-b09, mixed mode)
 ```
 
-## Change the default java or javac providers.
+## Change the default java or javac providers
+The `alternatives` command in Linux is used to manage symbolic links for various commands, system components, or programs. It allows users to easily switch between different versions or implementations of a particular software package or utility.
 ```
 sudo alternatives --config java
 ```
