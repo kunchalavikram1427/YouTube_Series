@@ -102,7 +102,13 @@ echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 apt-get update -y
 apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
+```
+Check kubeadm version
+```
 kubeadm version
+```
+```
+kubeadm version: &version.Info{Major:"1", Minor:"29", GitVersion:"v1.29.2", GitCommit:"4b8e819355d791d96b7e9d9efe4cbafae2311c88", GitTreeState:"clean", BuildDate:"2024-02-14T10:39:04Z", GoVersion:"go1.21.7", Compiler:"gc", Platform:"linux/amd64"}
 ```
 
 ## Run on Master Node and follow the instructions
