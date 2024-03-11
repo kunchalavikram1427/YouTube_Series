@@ -132,9 +132,10 @@ kubeadm join \
 ## Test the setup
 ```
 kubectl get nodes
-NAME               STATUS   ROLES           AGE     VERSION
-NODENAME           Ready    control-plane   3m34s   v1.28.2
-NODENAME           Ready    <none>          8s      v1.28.2
+NAME       STATUS   ROLES           AGE     VERSION
+master     Ready    control-plane   3m59s   v1.29.2
+slave-01   Ready    <none>          3m19s   v1.29.2
+
 ******
 ```
 ```
