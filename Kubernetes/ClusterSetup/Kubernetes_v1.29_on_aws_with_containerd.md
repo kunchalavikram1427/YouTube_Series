@@ -32,7 +32,6 @@ sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 ```
 #### Install Containerd
 ```
-wget https://github.com/containerd/containerd/releases/download/v1.7.4/containerd-1.7.4-linux-amd64.tar.gz
 wget https://github.com/containerd/containerd/releases/download/v1.7.13/containerd-1.7.13-linux-amd64.tar.gz
 tar Cxzvf /usr/local containerd-1.7.13-linux-amd64.tar.gz
 wget https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
